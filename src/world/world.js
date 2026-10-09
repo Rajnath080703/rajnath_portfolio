@@ -21,35 +21,35 @@ function lightStates() {
   const C = OFFSET.campus;
   return {
     hero: {
-      exposure: 0.95, env: 0.32, fog: [0x0b0c0d, 12, 48],
+      exposure: 0.95, env: 0.32, fog: [0x151618, 16, 60],
       hemi: [0xb8bbc0, 0x1c1c1c, 0.6],
       key: { pos: V(-2.6, 3.3, 5.0), target: V(0, 1.2, 0), color: 0xf2efe8, i: 6.5, angle: 0.5 },
       rim: { pos: V(0.4, 2.9, -2.4), color: 0xe4e2dc, i: 4 },
       fill: 2.2,
     },
     aisle: {
-      exposure: 0.95, env: 0.3, fog: [0x0b0c0d, 8, 40],
+      exposure: 0.95, env: 0.3, fog: [0x151618, 12, 55],
       hemi: [0xb8bbc0, 0x1c1c1c, 0.75],
       key: { pos: V(0, 3.25, -20), target: V(0, 0, -21), color: 0xf2efe8, i: 3.2, angle: 1.25 },
       rim: { pos: V(0, 3.0, -44.5), color: 0xe4e2dc, i: 3.5 },
       fill: 2.0,
     },
     network: {
-      exposure: 0.95, env: 0.32, fog: [0x0b0c0d, 6, 30],
+      exposure: 0.95, env: 0.32, fog: [0x151618, 8, 40],
       hemi: [0xb8bbc0, 0x1c1c1c, 0.6],
       key: { pos: V(-1.5, 3.2, -42.5), target: V(0, 1.3, -45.5), color: 0xf2efe8, i: 4.5, angle: 0.6 },
       rim: { pos: V(0.8, 2.6, -47.5), color: 0xe4e2dc, i: 3 },
       fill: 1.8,
     },
     noc: {
-      exposure: 0.85, env: 0.15, fog: [0x070708, 7, 24],
+      exposure: 0.95, env: 0.2, fog: [0x101112, 9, 30],
       hemi: [0x9aa5b5, 0x0d0d0e, 0.18],
       key: { pos: V(0.6, 3.1, -0.8, N), target: V(0, 0.8, -1.7, N), color: 0xfff1e0, i: 2.4, angle: 0.75 },
       rim: { pos: V(0, 1.9, -3.9, N), color: 0xdde3ea, i: 2.2 },
       fill: 0.6,
     },
     monitor: {
-      exposure: 0.85, env: 0.1, fog: [0x050506, 4, 16],
+      exposure: 0.95, env: 0.15, fog: [0x0b0c0d, 6, 22],
       hemi: [0x9aa5b5, 0x0d0d0e, 0.1],
       key: { pos: V(0.6, 3.1, -0.8, N), target: V(0, 0.8, -1.7, N), color: 0xfff1e0, i: 1.2, angle: 0.75 },
       rim: { pos: V(0, 1.2, -1.5, N), color: 0xdde3ea, i: 1.6 },
@@ -63,9 +63,9 @@ function lightStates() {
       fill: 0,
     },
     lab: {
-      exposure: 0.85, env: 0.32, fog: [0x0b0c0e, 14, 48],
-      hemi: [0xe2e8ef, 0x2a2a2c, 0.85],
-      key: { pos: V(0, 4.1, 2, L), target: V(0, 0, -1, L), color: 0xf4f6f8, i: 2.2, angle: 1.3 },
+      exposure: 0.95, env: 0.32, fog: [0x0b0c0e, 16, 56],
+      hemi: [0xe2e8ef, 0x3a3a3c, 1.15],
+      key: { pos: V(0, 4.1, 2, L), target: V(0, 0, -1, L), color: 0xf4f6f8, i: 3.0, angle: 1.3 },
       rim: { pos: V(0, 2.4, -13.5, L), color: 0xe6e8ea, i: 5 },
       fill: 0.5,
     },
@@ -85,6 +85,9 @@ function lightStates() {
     },
   };
 }
+
+/** Overall exposure multiplier — raise/lower to make the whole film brighter/darker. */
+const BRIGHTNESS = 1.55;
 
 const TIMELINE = [
   [0.0, 'hero'], [0.145, 'hero'], [0.185, 'aisle'], [0.225, 'aisle'], [0.255, 'network'], [0.2995, 'network'],
@@ -209,7 +212,8 @@ export class World {
     const intro = this.intro;
     const { renderer, scene, camera } = this.stage;
 
-    renderer.toneMappingExposure = L(a.exposure, b.exposure);
+    // global brightness lift (the site read too dark without the old environment map)
+    renderer.toneMappingExposure = L(a.exposure, b.exposure) * BRIGHTNESS;
     lerpColor(a.fog[0], b.fog[0], t, scene.fog.color);
     scene.fog.near = L(a.fog[1], b.fog[1]);
     scene.fog.far = L(a.fog[2], b.fog[2]);
@@ -219,7 +223,7 @@ export class World {
     lerpColor(a.hemi[1], b.hemi[1], t, this.hemi.groundColor);
     // There is no environment map (it cost ~4 s of shader compile on first visit);
     // each state's former reflection strength becomes soft ambient fill instead.
-    this.hemi.intensity = (L(a.hemi[2], b.hemi[2]) + L(a.env, b.env) * 2.6) * intro;
+    this.hemi.intensity = (L(a.hemi[2], b.hemi[2]) + L(a.env, b.env) * 4.5) * intro;
 
     this.key.position.lerpVectors(a.key.pos, b.key.pos, t);
     this.keyTarget.position.lerpVectors(a.key.target, b.key.target, t);
