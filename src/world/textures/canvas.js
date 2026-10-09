@@ -112,10 +112,31 @@ export function grid(ctx, x, y, w, h, rows = 4, color = 'rgba(255,255,255,0.06)'
   }
 }
 
+/**
+ * Speckle noise written straight into the pixel buffer (one getImageData /
+ * putImageData instead of thousands of fillRect calls — ~10× faster).
+ * Expects an untransformed context covering the full canvas.
+ */
 export function noiseFill(ctx, w, h, rand, alpha = 0.05, count = 4000) {
+  const W = Math.ceil(w);
+  const H = Math.ceil(h);
+  const img = ctx.getImageData(0, 0, W, H);
+  const d = img.data;
   for (let i = 0; i < count; i++) {
     const v = rand() > 0.5 ? 255 : 0;
-    ctx.fillStyle = `rgba(${v},${v},${v},${alpha * rand()})`;
-    ctx.fillRect(rand() * w, rand() * h, 1 + rand() * 2, 1 + rand() * 2);
+    const a = alpha * rand();
+    const x0 = (rand() * W) | 0;
+    const y0 = (rand() * H) | 0;
+    const x1 = Math.min(W, x0 + 1 + ((rand() * 2) | 0));
+    const y1 = Math.min(H, y0 + 1 + ((rand() * 2) | 0));
+    for (let y = y0; y < y1; y++) {
+      for (let x = x0; x < x1; x++) {
+        const k = (y * W + x) * 4;
+        d[k] += (v - d[k]) * a;
+        d[k + 1] += (v - d[k + 1]) * a;
+        d[k + 2] += (v - d[k + 2]) * a;
+      }
+    }
   }
+  ctx.putImageData(img, 0, 0);
 }

@@ -210,7 +210,6 @@ export class World {
     const { renderer, scene, camera } = this.stage;
 
     renderer.toneMappingExposure = L(a.exposure, b.exposure);
-    scene.environmentIntensity = L(a.env, b.env) * intro;
     lerpColor(a.fog[0], b.fog[0], t, scene.fog.color);
     scene.fog.near = L(a.fog[1], b.fog[1]);
     scene.fog.far = L(a.fog[2], b.fog[2]);
@@ -218,7 +217,9 @@ export class World {
 
     lerpColor(a.hemi[0], b.hemi[0], t, this.hemi.color);
     lerpColor(a.hemi[1], b.hemi[1], t, this.hemi.groundColor);
-    this.hemi.intensity = L(a.hemi[2], b.hemi[2]) * intro;
+    // There is no environment map (it cost ~4 s of shader compile on first visit);
+    // each state's former reflection strength becomes soft ambient fill instead.
+    this.hemi.intensity = (L(a.hemi[2], b.hemi[2]) + L(a.env, b.env) * 2.6) * intro;
 
     this.key.position.lerpVectors(a.key.pos, b.key.pos, t);
     this.keyTarget.position.lerpVectors(a.key.target, b.key.target, t);

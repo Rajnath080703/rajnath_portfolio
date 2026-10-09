@@ -184,6 +184,12 @@ main {
 #cinema {
   position: relative;
   pointer-events: none;
+  height: 3000vh; /* = CINEMA_VH in src/data/chapters.js — set here so the page never shifts */
+}
+@media (max-width: 819.98px), (pointer: coarse) {
+  #cinema {
+    height: 2300vh; /* = CINEMA_VH_MOBILE */
+  }
 }
 
 /* ---------------- loader ---------------- */

@@ -542,4 +542,12 @@
     min-height: 44px;
     padding: 10px 14px;
   }
+  .term__input {
+    min-height: 44px;
+  }
+  .t-cmd {
+    display: inline-block;
+    min-height: 24px;
+    line-height: 24px;
+  }
 }

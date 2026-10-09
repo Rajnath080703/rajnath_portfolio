@@ -47,7 +47,7 @@ async function boot() {
 
   const { gsap, ScrollTrigger } = initSmoothScroll({ reducedMotion });
   const hud = new Hud();
-  initPortfolio($('#portfolio'), { gsap, ScrollTrigger, reducedMotion, hud });
+  const portfolio = initPortfolio($('#portfolio'), { gsap, ScrollTrigger, reducedMotion, hud });
 
   let engine;
   try {
@@ -65,6 +65,7 @@ async function boot() {
     console.warn('WebGL unavailable, falling back to static mode', err);
     document.body.classList.add('no-webgl');
     finishLoading();
+    portfolio.startMotion();
     const captions = new Captions($('#captions'));
     gsap.ticker.add(() => captions.update(progress(cinema)));
     return;
@@ -156,6 +157,12 @@ async function boot() {
   });
 
   finishLoading(engine, gsap);
+  // portfolio reveals: set up once the browser is idle after the reveal
+  const idle = (fn) => (window.requestIdleCallback ? requestIdleCallback(fn, { timeout: 3000 }) : setTimeout(fn, 1500));
+  idle(() => {
+    portfolio.startMotion();
+    ScrollTrigger.refresh();
+  });
 }
 
 function progress(cinema) {

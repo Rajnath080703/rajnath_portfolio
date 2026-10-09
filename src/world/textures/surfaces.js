@@ -105,11 +105,23 @@ export function groundTexture() {
   const rand = rng(41);
   ctx.fillStyle = '#1e2620';
   ctx.fillRect(0, 0, S, S);
+  // grass blades written directly into the pixel buffer (fast)
+  const img = ctx.getImageData(0, 0, S, S);
+  const d = img.data;
   for (let i = 0; i < 18000; i++) {
     const g = 30 + rand() * 30;
-    ctx.fillStyle = `rgba(${g * 0.7},${g},${g * 0.75},0.35)`;
-    ctx.fillRect(rand() * S, rand() * S, 1.5, 2.5);
+    const x0 = (rand() * S) | 0;
+    const y0 = (rand() * S) | 0;
+    for (let y = y0; y < Math.min(S, y0 + 3); y++) {
+      for (let x = x0; x < Math.min(S, x0 + 2); x++) {
+        const k = (y * S + x) * 4;
+        d[k] += (g * 0.7 - d[k]) * 0.35;
+        d[k + 1] += (g - d[k + 1]) * 0.35;
+        d[k + 2] += (g * 0.75 - d[k + 2]) * 0.35;
+      }
+    }
   }
+  ctx.putImageData(img, 0, 0);
   return toTexture(c, { repeat: [1, 1] });
 }
 

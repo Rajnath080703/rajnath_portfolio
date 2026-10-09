@@ -192,54 +192,62 @@ export function initPortfolio(root, { gsap, ScrollTrigger, reducedMotion, hud })
 
   if (reducedMotion) {
     root.classList.add('no-motion');
-    return;
+    return { startMotion: () => {} };
   }
 
-  // Word-by-word masked title reveals (scrubbed)
-  root.querySelectorAll('.split').forEach((el) => {
+  // Scroll-scrubbed reveals are created later (idle time after the film is
+  // revealed) so their setup never competes with first load.
+  return {
+    startMotion() {
+
+    // Word-by-word masked title reveals (scrubbed)
+    root.querySelectorAll('.split').forEach((el) => {
+      gsap.fromTo(
+        el.querySelectorAll('.w__i'),
+        { yPercent: 110 },
+        { yPercent: 0, ease: 'none', stagger: 0.12, scrollTrigger: { trigger: el, start: 'top 92%', end: 'top 55%', scrub: true } }
+      );
+    });
+
+    // Experience groups: clip-path wipe + rule draw + staggered items
+    root.querySelectorAll('.grp').forEach((g) => {
+      const tl = gsap.timeline({ scrollTrigger: { trigger: g, start: 'top 88%', end: 'top 45%', scrub: true } });
+      tl.fromTo(g, { clipPath: 'inset(0 0 100% 0)', y: 60 }, { clipPath: 'inset(0 0 0% 0)', y: 0, ease: 'none' }, 0)
+        .fromTo(g.querySelector('.rule'), { scaleX: 0 }, { scaleX: 1, ease: 'none' }, 0.1)
+        .fromTo(g.querySelectorAll('li'), { opacity: 0, x: -14 }, { opacity: 1, x: 0, stagger: 0.05, ease: 'none' }, 0.2);
+    });
+
+    // Lines (previous experience, education, languages)
+    root.querySelectorAll('.reveal-line').forEach((li) => {
+      gsap.fromTo(li, { opacity: 0, y: 26 }, { opacity: 1, y: 0, ease: 'none', scrollTrigger: { trigger: li, start: 'top 94%', end: 'top 70%', scrub: true } });
+    });
+
+    // Skill wall: columns drift at different speeds, chips settle into place
+    const wall = root.querySelector('.wall');
+    root.querySelectorAll('.wall__col').forEach((col) => {
+      const sp = parseFloat(col.dataset.speed);
+      gsap.fromTo(col, { y: () => 260 * sp }, { y: () => -260 * sp, ease: 'none', scrollTrigger: { trigger: wall, start: 'top bottom', end: 'bottom top', scrub: true } });
+      gsap.fromTo(
+        col.querySelectorAll('.chip'),
+        { opacity: 0, y: 30, letterSpacing: '0.12em' },
+        { opacity: 1, y: 0, letterSpacing: '0em', stagger: 0.06, ease: 'none', scrollTrigger: { trigger: col, start: 'top 90%', end: 'top 40%', scrub: true } }
+      );
+    });
+    gsap.fromTo('.skills__ghost', { xPercent: 0 }, { xPercent: -35, ease: 'none', scrollTrigger: { trigger: '#skills', start: 'top bottom', end: 'bottom top', scrub: true } });
+
+    // Certification: the big mark resolves from wide tracking
     gsap.fromTo(
-      el.querySelectorAll('.w__i'),
-      { yPercent: 110 },
-      { yPercent: 0, ease: 'none', stagger: 0.12, scrollTrigger: { trigger: el, start: 'top 92%', end: 'top 55%', scrub: true } }
+      '.cred__big',
+      { letterSpacing: '0.5em', filter: 'blur(6px)' },
+      { letterSpacing: '-0.02em', filter: 'blur(0px)', ease: 'none', scrollTrigger: { trigger: '.cred__big', start: 'top 95%', end: 'top 55%', scrub: true } }
     );
-  });
 
-  // Experience groups: clip-path wipe + rule draw + staggered items
-  root.querySelectorAll('.grp').forEach((g) => {
-    const tl = gsap.timeline({ scrollTrigger: { trigger: g, start: 'top 88%', end: 'top 45%', scrub: true } });
-    tl.fromTo(g, { clipPath: 'inset(0 0 100% 0)', y: 60 }, { clipPath: 'inset(0 0 0% 0)', y: 0, ease: 'none' }, 0)
-      .fromTo(g.querySelector('.rule'), { scaleX: 0 }, { scaleX: 1, ease: 'none' }, 0.1)
-      .fromTo(g.querySelectorAll('li'), { opacity: 0, x: -14 }, { opacity: 1, x: 0, stagger: 0.05, ease: 'none' }, 0.2);
-  });
+    // Terminal rises out of the dark
+    gsap.fromTo('.term', { y: 80, scale: 0.96 }, { y: 0, scale: 1, ease: 'none', scrollTrigger: { trigger: '.term', start: 'top 98%', end: 'top 55%', scrub: true } });
 
-  // Lines (previous experience, education, languages)
-  root.querySelectorAll('.reveal-line').forEach((li) => {
-    gsap.fromTo(li, { opacity: 0, y: 26 }, { opacity: 1, y: 0, ease: 'none', scrollTrigger: { trigger: li, start: 'top 94%', end: 'top 70%', scrub: true } });
-  });
+    // Contact name lines
+    gsap.fromTo('.contact__name .line > span', { yPercent: 105 }, { yPercent: 0, stagger: 0.15, ease: 'none', scrollTrigger: { trigger: '.contact__name', start: 'top 95%', end: 'top 50%', scrub: true } });
 
-  // Skill wall: columns drift at different speeds, chips settle into place
-  const wall = root.querySelector('.wall');
-  root.querySelectorAll('.wall__col').forEach((col) => {
-    const sp = parseFloat(col.dataset.speed);
-    gsap.fromTo(col, { y: () => 260 * sp }, { y: () => -260 * sp, ease: 'none', scrollTrigger: { trigger: wall, start: 'top bottom', end: 'bottom top', scrub: true } });
-    gsap.fromTo(
-      col.querySelectorAll('.chip'),
-      { opacity: 0, y: 30, letterSpacing: '0.12em' },
-      { opacity: 1, y: 0, letterSpacing: '0em', stagger: 0.06, ease: 'none', scrollTrigger: { trigger: col, start: 'top 90%', end: 'top 40%', scrub: true } }
-    );
-  });
-  gsap.fromTo('.skills__ghost', { xPercent: 0 }, { xPercent: -35, ease: 'none', scrollTrigger: { trigger: '#skills', start: 'top bottom', end: 'bottom top', scrub: true } });
-
-  // Certification: the big mark resolves from wide tracking
-  gsap.fromTo(
-    '.cred__big',
-    { letterSpacing: '0.5em', opacity: 0.15, filter: 'blur(6px)' },
-    { letterSpacing: '-0.02em', opacity: 1, filter: 'blur(0px)', ease: 'none', scrollTrigger: { trigger: '.cred__big', start: 'top 95%', end: 'top 55%', scrub: true } }
-  );
-
-  // Terminal rises out of the dark
-  gsap.fromTo('.term', { y: 80, scale: 0.96, opacity: 0.2 }, { y: 0, scale: 1, opacity: 1, ease: 'none', scrollTrigger: { trigger: '.term', start: 'top 98%', end: 'top 55%', scrub: true } });
-
-  // Contact name lines
-  gsap.fromTo('.contact__name .line > span', { yPercent: 105 }, { yPercent: 0, stagger: 0.15, ease: 'none', scrollTrigger: { trigger: '.contact__name', start: 'top 95%', end: 'top 50%', scrub: true } });
+    },
+  };
 }
