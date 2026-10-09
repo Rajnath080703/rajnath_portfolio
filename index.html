@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rajnath Tamizh Selvan — System Engineer</title>
+    <meta
+      name="description"
+      content="Rajnath Tamizh Selvan — System Engineer. Linux, Virtualization and IT Infrastructure. A cinematic journey through servers, networks, Proxmox, monitoring, backup, a cyber security lab and WayFinder."
+    />
+    <meta name="theme-color" content="#050506" />
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <link rel="stylesheet" href="./src/styles/fonts.css" />
+    <link rel="stylesheet" href="./src/styles/base.css" />
+    <link rel="stylesheet" href="./src/styles/cinema.css" />
+    <link rel="stylesheet" href="./src/styles/sections.css" />
+    <link rel="stylesheet" href="./src/styles/terminal.css" />
+  </head>
+  <body class="is-loading">
+    <a class="skip-link" href="#about">Skip to profile</a>
+
+    <!-- Preloader -->
+    <div id="loader" aria-live="polite">
+      <div class="loader__inner">
+        <p class="loader__label mono">rajnath@portfolio:~$ <span id="loader-step">booting infrastructure</span></p>
+        <div class="loader__bar"><span id="loader-fill"></span></div>
+        <p class="loader__pct mono"><span id="loader-pct">0</span>%</p>
+      </div>
+    </div>
+
+    <!-- WebGL stage: one renderer, one continuous world -->
+    <canvas id="webgl" aria-hidden="true"></canvas>
+    <div id="blackout" aria-hidden="true"></div>
+    <div class="fx-vignette" aria-hidden="true"></div>
+    <div class="fx-grain" aria-hidden="true"></div>
+
+    <!-- HUD -->
+    <header class="hud">
+      <a class="hud__mark mono" href="#top" aria-label="RTS/SE, back to top">RTS<span>/</span>SE</a>
+      <div class="hud__chapter mono" aria-live="off">
+        <span id="hud-num">01</span><i></i><span id="hud-label">Origin</span>
+      </div>
+      <nav class="hud__nav mono" aria-label="Sections">
+        <a href="#experience">Experience</a>
+        <a href="#projects">Projects</a>
+        <a href="#skills">Skills</a>
+        <a href="#terminal">Terminal</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </header>
+    <div class="hud__progress" aria-hidden="true"><span id="hud-progress"></span></div>
+    <div class="hud__scroll mono" id="scroll-hint" aria-hidden="true"><i></i>Scroll to enter</div>
+
+    <!-- Cinematic captions (rendered from src/data/chapters.js) -->
+    <div id="captions" aria-hidden="false"></div>
+    <!-- Projected 3D labels (backup flow) -->
+    <div id="labels3d" aria-hidden="true"></div>
+    <!-- WayFinder map UI + Live AR phone (src/ui/wayfinder.js) -->
+    <div id="wayfinder-ui" aria-hidden="true"></div>
+
+    <main id="top">
+      <!-- The cinematic scroll track. Its height drives the camera. -->
+      <section id="cinema" aria-label="Cinematic infrastructure journey"></section>
+
+      <!-- Professional portfolio (rendered from src/data/profile.js) -->
+      <div id="portfolio"></div>
+    </main>
+
+    <noscript>
+      <div class="noscript">
+        <h1>Rajnath Tamizh Selvan</h1>
+        <p>System Engineer — Linux, Virtualization &amp; IT Infrastructure. Enable JavaScript for the full experience.</p>
+      </div>
+    </noscript>
+
+    <script type="module" src="./src/main.js"></script>
+  </body>
+</html>

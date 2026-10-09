@@ -1,0 +1,14 @@
+{
+ "server-room": "1558494949-ef010cbdcc31",
+ "rack": "1695668548342-c0c1ad479aee",
+ "patch-panel": "1544197150-b99a580bb7a8",
+ "switch": "1682559736721-c2e77ff4c650",
+ "drives": "1762163516269-3c143e04175c",
+ "workstation": "1555963153-11ff60182d08",
+ "office-monitor": "1576521527942-d2e27a843bc3",
+ "campus-path": "1789886797928-80f4abdf2744",
+ "campus-road": "1741639466363-a9edfe843079",
+ "lab-room": "1643199121319-b3b5695e4acb",
+ "lab-students": "1569653402334-2e98fbaa80ee",
+ "lab-monitor": "1723987251277-18fc0a1effd0"
+}
