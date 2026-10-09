@@ -1,0 +1,9 @@
+# Normalise text to LF in the repository; never touch binary assets.
+* text=auto eol=lf
+*.pdf binary
+*.woff2 binary
+*.jpg binary
+*.jpeg binary
+*.png binary
+*.webp binary
+*.ico binary
