@@ -43,14 +43,14 @@ function lightStates() {
     },
     noc: {
       exposure: 0.95, env: 0.2, fog: [0x101112, 9, 30],
-      hemi: [0x9aa5b5, 0x0d0d0e, 0.18],
+      hemi: [0x9aa5b5, 0x1a1a1c, 0.45],
       key: { pos: V(0.6, 3.1, -0.8, N), target: V(0, 0.8, -1.7, N), color: 0xfff1e0, i: 2.4, angle: 0.75 },
       rim: { pos: V(0, 1.9, -3.9, N), color: 0xdde3ea, i: 2.2 },
       fill: 0.6,
     },
     monitor: {
       exposure: 0.95, env: 0.15, fog: [0x0b0c0d, 6, 22],
-      hemi: [0x9aa5b5, 0x0d0d0e, 0.1],
+      hemi: [0x9aa5b5, 0x1a1a1c, 0.3],
       key: { pos: V(0.6, 3.1, -0.8, N), target: V(0, 0.8, -1.7, N), color: 0xfff1e0, i: 1.2, angle: 0.75 },
       rim: { pos: V(0, 1.2, -1.5, N), color: 0xdde3ea, i: 1.6 },
       fill: 0.3,
@@ -70,15 +70,15 @@ function lightStates() {
       fill: 0.5,
     },
     campusMap: {
-      exposure: 1.0, env: 0.16, fog: [0x2a2f38, 260, 700],
-      hemi: [0x6a7894, 0x262820, 0.9],
+      exposure: 1.1, env: 0.2, fog: [0x3a404c, 260, 700],
+      hemi: [0x8a96b0, 0x30332a, 1.5],
       key: { pos: V(-120, 260, 140, C), target: V(20, 0, 20, C), color: 0xaab8d0, i: 1.1, angle: 0.7 },
       rim: { pos: V(20, 30, 20, C), color: 0xffd9a8, i: 0 },
       fill: 0,
     },
     campusStreet: {
-      exposure: 1.1, env: 0.2, fog: [0x2a2f38, 30, 260],
-      hemi: [0x6a7894, 0x262820, 1.25],
+      exposure: 1.2, env: 0.24, fog: [0x3a404c, 40, 300],
+      hemi: [0x8a96b0, 0x30332a, 1.8],
       key: { pos: V(-120, 260, 140, C), target: V(20, 0, 20, C), color: 0xb4c2da, i: 1.8, angle: 0.7 },
       rim: { pos: V(20, 30, 20, C), color: 0xffd9a8, i: 0 },
       fill: 0.5,
@@ -87,7 +87,7 @@ function lightStates() {
 }
 
 /** Overall exposure multiplier — raise/lower to make the whole film brighter/darker. */
-const BRIGHTNESS = 1.55;
+const BRIGHTNESS = 2.0;
 
 const TIMELINE = [
   [0.0, 'hero'], [0.145, 'hero'], [0.185, 'aisle'], [0.225, 'aisle'], [0.255, 'network'], [0.2995, 'network'],
@@ -223,7 +223,7 @@ export class World {
     lerpColor(a.hemi[1], b.hemi[1], t, this.hemi.groundColor);
     // There is no environment map (it cost ~4 s of shader compile on first visit);
     // each state's former reflection strength becomes soft ambient fill instead.
-    this.hemi.intensity = (L(a.hemi[2], b.hemi[2]) + L(a.env, b.env) * 4.5) * intro;
+    this.hemi.intensity = (L(a.hemi[2], b.hemi[2]) + L(a.env, b.env) * 6.0) * intro;
 
     this.key.position.lerpVectors(a.key.pos, b.key.pos, t);
     this.keyTarget.position.lerpVectors(a.key.target, b.key.target, t);
