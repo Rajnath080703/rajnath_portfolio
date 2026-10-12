@@ -1,4 +1,4 @@
-/** Chapter indicator, page progress and the scroll hint. */
+/** Chapter indicator and page progress. */
 import { chapters } from '../data/chapters.js';
 
 export class Hud {
@@ -6,7 +6,6 @@ export class Hud {
     this.num = document.getElementById('hud-num');
     this.label = document.getElementById('hud-label');
     this.bar = document.getElementById('hud-progress');
-    this.hint = document.getElementById('scroll-hint');
     this.current = '';
     this.lastBar = -1;
     this.sectionLabel = null; // set by portfolio sections once past the cinema
@@ -32,6 +31,5 @@ export class Hud {
       this.lastBar = b;
       this.bar.style.transform = `scaleY(${b})`;
     }
-    this.hint.classList.toggle('is-hidden', p > 0.006);
   }
 }
