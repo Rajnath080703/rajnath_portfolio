@@ -129,6 +129,16 @@
 .t-cmd:hover {
   text-decoration-color: #fff;
 }
+/* help table: command + description; stacks on phones */
+.t-hrow {
+  display: grid;
+  grid-template-columns: 16ch minmax(0, 1fr);
+  gap: 0 1ch;
+  padding-left: 2ch;
+}
+.t-hrow .t-cmd {
+  justify-self: start;
+}
 .term a {
   color: #fff;
   text-underline-offset: 3px;
@@ -160,5 +170,13 @@
   }
   .t-prompt {
     font-size: 11px;
+  }
+  .t-hrow {
+    grid-template-columns: minmax(0, 1fr);
+    padding-left: 0;
+    margin-bottom: 6px;
+  }
+  .t-hrow .t-dim {
+    padding-left: 2ch;
   }
 }

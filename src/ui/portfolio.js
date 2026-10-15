@@ -214,7 +214,7 @@ export function initPortfolio(root, { gsap, ScrollTrigger, reducedMotion, hud })
       const tl = gsap.timeline({ scrollTrigger: { trigger: g, start: 'top 88%', end: 'top 45%', scrub: true } });
       tl.fromTo(g, { clipPath: 'inset(0 0 100% 0)', y: 60 }, { clipPath: 'inset(0 0 0% 0)', y: 0, ease: 'none' }, 0)
         .fromTo(g.querySelector('.rule'), { scaleX: 0 }, { scaleX: 1, ease: 'none' }, 0.1)
-        .fromTo(g.querySelectorAll('li'), { opacity: 0, x: -14 }, { opacity: 1, x: 0, stagger: 0.05, ease: 'none' }, 0.2);
+        .fromTo(g.querySelectorAll('li'), { opacity: 0, y: 10 }, { opacity: 1, y: 0, stagger: 0.05, ease: 'none' }, 0.2);
     });
 
     // Lines (previous experience, education, languages)

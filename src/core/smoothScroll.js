@@ -9,9 +9,12 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
-export function initSmoothScroll({ reducedMotion }) {
+export function initSmoothScroll({ reducedMotion, touch = false }) {
   let lenis = null;
-  if (!reducedMotion) {
+  // Phones/tablets keep the browser's own touch scrolling (momentum, address-bar
+  // collapse, rubber-banding); Lenis only smooths mouse wheels and trackpads.
+  ScrollTrigger.config({ ignoreMobileResize: true });
+  if (!reducedMotion && !touch) {
     lenis = new Lenis({
       lerp: 0.07,
       wheelMultiplier: 0.85,
@@ -28,7 +31,7 @@ export function initSmoothScroll({ reducedMotion }) {
   function scrollTo(target, opts = {}) {
     const el = typeof target === 'string' ? document.querySelector(target) : target;
     if (lenis) lenis.scrollTo(el ?? target, { duration: 2.2, ...opts });
-    else if (el?.scrollIntoView) el.scrollIntoView({ behavior: 'auto' });
+    else if (el?.scrollIntoView) el.scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth' });
     else window.scrollTo(0, target);
   }
 

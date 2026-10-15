@@ -45,7 +45,7 @@ async function boot() {
     /* fonts are optional */
   }
 
-  const { gsap, ScrollTrigger } = initSmoothScroll({ reducedMotion });
+  const { gsap, ScrollTrigger } = initSmoothScroll({ reducedMotion, touch: isMobile });
   const hud = new Hud();
   const portfolio = initPortfolio($('#portfolio'), { gsap, ScrollTrigger, reducedMotion, hud });
 
@@ -90,13 +90,22 @@ async function boot() {
   let cinemaTop = 0;
   let cinemaLen = 1;
   let docLen = 1;
+  // On phones the address bar showing/hiding changes innerHeight mid-scroll; use
+  // the largest height seen for this width so the film never jumps.
+  let viewW = window.innerWidth;
+  let viewH = window.innerHeight;
   const measure = () => {
+    if (window.innerWidth !== viewW || !isMobile) {
+      viewW = window.innerWidth;
+      viewH = window.innerHeight;
+    } else viewH = Math.max(viewH, window.innerHeight);
     cinemaTop = cinema.offsetTop;
-    cinemaLen = Math.max(1, cinema.offsetHeight - window.innerHeight);
+    cinemaLen = Math.max(1, cinema.offsetHeight - viewH);
     docLen = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
   };
   measure();
   window.addEventListener('resize', measure, { passive: true });
+  window.addEventListener('orientationchange', () => setTimeout(measure, 300), { passive: true });
   ScrollTrigger.addEventListener('refresh', measure);
 
   const blackoutEl = $('#blackout');
@@ -126,7 +135,7 @@ async function boot() {
     if (Math.abs(pRaw - pS) < 1e-5) pS = pRaw;
 
     // canvas fades as the portfolio scrolls in; rendering stops entirely after that
-    const after = (y - (cinemaTop + cinemaLen)) / window.innerHeight;
+    const after = (y - (cinemaTop + cinemaLen)) / viewH;
     const canvasA = 1 - clamp01(after / 0.9);
     if (Math.abs(canvasA - lastCanvasA) > 0.002) {
       lastCanvasA = canvasA;

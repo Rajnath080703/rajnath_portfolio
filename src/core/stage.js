@@ -60,8 +60,18 @@ export class Stage {
 
   resize() {
     const w = window.innerWidth;
-    const h = window.innerHeight;
+    // Phones: the address bar collapsing only changes the height. Size the canvas
+    // to the tallest height seen at this width (CSS: 100lvh) instead of
+    // reallocating the drawing buffer on every scroll direction change.
+    const touch = window.matchMedia('(pointer: coarse)').matches;
+    if (!touch || w !== this.lastW) this.maxH = 0;
+    this.lastW = w;
+    this.maxH = Math.max(this.maxH || 0, window.innerHeight);
+    const h = touch ? this.maxH : window.innerHeight;
     const dpr = MathUtils.clamp(Math.min(window.devicePixelRatio || 1, this.quality.maxDpr) * this.dprScale, this.quality.minDpr, 3);
+    const key = `${w}x${h}@${dpr}`;
+    if (key === this.sizedTo) return;
+    this.sizedTo = key;
     this.renderer.setPixelRatio(dpr);
     this.renderer.setSize(w, h, false);
     this.camera.aspect = w / h;

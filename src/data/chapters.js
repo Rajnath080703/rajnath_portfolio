@@ -5,7 +5,7 @@
 
 // Length of the cinematic scroll track in viewport heights.
 export const CINEMA_VH = 3000;
-export const CINEMA_VH_MOBILE = 2300;
+export const CINEMA_VH_MOBILE = 1600;
 
 export const chapters = [
   { id: 'hero', num: '01', label: 'Origin', start: 0.0, end: 0.07, hold: 0.02 },

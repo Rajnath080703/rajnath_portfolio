@@ -77,7 +77,27 @@ export class Labels3D {
         it.el.style.visibility = on ? 'visible' : 'hidden';
       }
       if (on) {
-        const x = (this.v.x * 0.5 + 0.5) * w;
+        // keep the whole label on screen (narrow phones): flip it left of its
+        // anchor when it would run off the right edge, never past the left.
+        // Width is measured once, the first time the label shows.
+        if (!it.wd) {
+          it.wd = it.el.offsetWidth;
+          it.centred = it.el.classList.contains('mapl'); // CSS-centred on its anchor
+        }
+        let x = (this.v.x * 0.5 + 0.5) * w;
+        if (it.centred) {
+          x = Math.min(Math.max(x, it.wd / 2 + 10), w - it.wd / 2 - 10);
+          const yc = (-this.v.y * 0.5 + 0.5) * h;
+          it.el.style.transform = `translate3d(${x.toFixed(1)}px, ${yc.toFixed(1)}px, 0)`;
+          continue;
+        }
+        const flip = x + it.wd > w - 10;
+        if (flip !== !!it.flip) {
+          it.flip = flip;
+          it.el.classList.toggle('is-flip', flip);
+        }
+        if (flip) x -= it.wd;
+        x = Math.min(Math.max(x, 10), w - it.wd - 10);
         const y = (-this.v.y * 0.5 + 0.5) * h;
         it.el.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0)`;
       }

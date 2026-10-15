@@ -342,6 +342,13 @@
   height: 26px;
   background: linear-gradient(var(--line-2), transparent);
 }
+.l3d.is-flip::before {
+  left: auto;
+  right: 0;
+}
+.l3d.is-flip {
+  text-align: right;
+}
 .l3d__i {
   grid-row: span 2;
   font-size: 10px;

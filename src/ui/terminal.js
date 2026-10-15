@@ -24,10 +24,10 @@ function out() {
   const c = p.contact;
   return {
     help: () =>
-      `<span class="t-dim">Available commands</span>\n` +
+      `<span class="t-dim">Available commands</span>` +
       Object.entries(COMMANDS)
-        .map(([k, v]) => `  <button class="t-cmd" data-cmd="${k}">${k.padEnd(16)}</button><span class="t-dim">${v}</span>`)
-        .join('\n'),
+        .map(([k, v]) => `<span class="t-hrow"><button class="t-cmd" data-cmd="${k}">${k}</button><span class="t-dim">${v}</span></span>`)
+        .join(''),
     about: () =>
       `<strong>${esc(p.name)}</strong>\n${esc(p.title)} — ${p.focus.map(esc).join(' · ')}\n\n` +
       `${esc(p.summary)}\n\n` +
