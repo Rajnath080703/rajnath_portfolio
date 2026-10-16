@@ -31,7 +31,7 @@ export function initSmoothScroll({ reducedMotion, touch = false }) {
   function scrollTo(target, opts = {}) {
     const el = typeof target === 'string' ? document.querySelector(target) : target;
     if (lenis) lenis.scrollTo(el ?? target, { duration: 2.2, ...opts });
-    else if (el?.scrollIntoView) el.scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth' });
+    else if (el?.scrollIntoView) el.scrollIntoView({ behavior: reducedMotion || opts.immediate ? 'auto' : 'smooth' });
     else window.scrollTo(0, target);
   }
 
@@ -44,7 +44,8 @@ export function initSmoothScroll({ reducedMotion, touch = false }) {
     const el = document.querySelector(id);
     if (!el) return;
     e.preventDefault();
-    scrollTo(el, id === '#top' ? { duration: 3 } : {});
+    // data-instant (Skip film): jump straight there instead of flying through the film
+    scrollTo(el, a.hasAttribute('data-instant') ? { immediate: true } : id === '#top' ? { duration: 3 } : {});
   });
 
   return { lenis, scrollTo, gsap, ScrollTrigger };
